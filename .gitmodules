@@ -1,6 +1,0 @@
-[submodule "crypto"]
-	path = crypto
-	url = git@github.com:SillySyx/crypto.git
-[submodule "glob"]
-	path = glob
-	url = git@github.com:SillySyx/glob.git
