@@ -1,4 +1,5 @@
-use event_sourcing::*;
+use std::error::Error;
+use event_sourcing::{Event, EventMode};
 
 #[derive(Debug)]
 struct ChangeNameEvent {
@@ -11,12 +12,12 @@ struct TestState {
 }
 
 impl Event<TestState> for ChangeNameEvent {
-    fn execute(&self, state: TestState, _mode: EventMode) -> TestState {
+    fn execute(&self, state: TestState, _mode: EventMode) -> Result<TestState, Box<dyn Error>> {
         let mut state = state.clone();
 
         state.name = self.new_name.clone();
 
-        state
+        Ok(state)
     }
 }
 
@@ -30,7 +31,9 @@ fn can_change_name_in_state_via_event() {
         new_name: String::from("2"),
     };
     
-    let state = event.execute(state, EventMode::New);
+    let state = event
+        .execute(state, EventMode::New)
+        .expect("failed to execute event");
 
     assert!(state.name == String::from("2"));
 }
