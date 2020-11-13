@@ -5,4 +5,5 @@ pub use {
     event::Event,
     event::EventMode,
     state::BinaryState,
+    state::JsonState,
 };
