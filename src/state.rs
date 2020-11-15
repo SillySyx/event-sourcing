@@ -1,9 +1,11 @@
-pub trait BinaryState {
-    fn from_bytes(bytes: Vec<u8>) -> Self;
-    fn to_bytes(&self) -> Vec<u8>;
-}
+use super::Event;
 
-pub trait JsonState {
-    fn from_json(json: String) -> Self;
-    fn to_json(&self) -> String;
+/// Adds execute function to your state to allow events to make changes
+pub trait State {
+    /// Executes the event in the state
+    /// 
+    /// # Important
+    /// Make sure you never mutate the state, 
+    /// always clone the state before making any changes
+    fn execute(&self, event: &Event) -> Self;
 }

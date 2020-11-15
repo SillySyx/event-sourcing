@@ -1,13 +1,16 @@
-!!!WIP!!!
-
-
-short description of the repo/project
+Allows you to implement basic event sourcing into your applications.
 
 
 ## Features
-* Store events in an immutable event log (you can only add new events to the log)
-* Project events into your own states
-* Each state is responsible for interpeting the event and may have their own implementation of them
+* Uses simple event stucture to represent your events (type: `String` and data: `Vec<u8>`)
+* Lets you define your own states
+* Use event logs to project your events into any state
+* Have full control over how states interpret events
+
+
+## Todo
+* Change Event struct to trait to allow custom implementations of the event model
+* Implement Result for EventLog::project and State::execute for better error handling
 
 
 ## Installation
@@ -24,20 +27,54 @@ event-sourcing = { path = "./event-sourcing" }
 ```
 
 
-## Examples
+## Example
 
+Define your state
+```
+#[derive(Clone)]
+struct MyNameState {
+    name: String,
+}
 ```
 
-fn main() {
-    // load event log
+Implement required trait for your state
+```
+impl State for MyNameState {
+    fn execute(&self, event: &Event) -> Self
+    {
+        if event.event_type == "ChangeName" {
+            return change_name(self, event);
+        }
 
-    // project event log into new state
-
-    // read data from state
-
-    // add a new event to the event log
-
-    // project event log into new state using previous state as inital state
+        self.clone()
+    }
 }
 
+fn change_name(state: &MyNameState, event: &Event) -> MyNameState {
+    let mut state = state.clone();
+
+    let name = event.data.clone();
+    let name = String::from_utf8(name).unwrap();
+
+    state.name = name;
+
+    state
+}
+```
+
+Load/initialize your event log and project it into your state
+```
+let event = Event {
+    event_type: String::from("ChangeName"),
+    data: String::from("Hello").as_bytes().to_owned(),
+};
+
+let mut eventlog = EventLog::new();
+eventlog.events.push(event);
+
+let state = MyNameState {
+    name: String::from("Me"),
+};
+
+let state = eventlog.project(state);
 ```
