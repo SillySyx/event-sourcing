@@ -1,9 +1,8 @@
-use std::error::Error;
-
 use super::{Event, State};
 
+#[derive(Debug, Clone)]
 pub struct EventLog {
-    events: Vec<Event>,
+    pub events: Vec<Event>,
 }
 
 impl EventLog {
@@ -13,19 +12,11 @@ impl EventLog {
         }
     }
 
-    pub fn add_event(&mut self, event: &Event) {
-        let event = event.to_owned();
-        
-        self.events.push(event);
-    }
-
-    pub fn project<TState: State>(&self, state: TState) -> Result<TState, Box<dyn Error>> {
-        let state = self.events
+    pub fn project<TState: State>(&self, state: TState) -> TState {
+        self.events
             .iter()
             .fold(state, |state, event| {
                 state.execute(event)
-            });
-
-        Ok(state)
+            })
     }
 }
