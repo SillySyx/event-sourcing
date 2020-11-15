@@ -27,7 +27,6 @@ event-sourcing = { path = "./event-sourcing" }
 ## Examples
 
 ```
-
 fn main() {
     // load event log
 
@@ -39,5 +38,4 @@ fn main() {
 
     // project event log into new state using previous state as inital state
 }
-
 ```

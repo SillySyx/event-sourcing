@@ -1,10 +1,5 @@
-use std::error::Error;
-
-pub enum EventMode {
-    New,
-    Replay,
-}
-
-pub trait Event<TState> {
-    fn execute(&self, state: TState, mode: EventMode) -> Result<TState, Box<dyn Error>>;
+#[derive(Debug, Clone)]
+pub struct Event {
+    pub event_type: String,
+    pub data: Vec<u8>,
 }

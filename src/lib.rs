@@ -1,9 +1,9 @@
+mod eventlog;
 mod event;
 mod state;
 
 pub use {
+    eventlog::EventLog,
     event::Event,
-    event::EventMode,
-    state::BinaryState,
-    state::JsonState,
+    state::State,
 };
